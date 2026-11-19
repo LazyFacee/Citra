@@ -1,0 +1,9 @@
+{
+  "name": "citra",
+  "version": "1.0.0",
+  "description": "Alat gambar pribadi yang berjalan di browser. Private image toolkit that runs in your browser.",
+  "private": true,
+  "type": "module",
+  "scripts": { "build": "node build.mjs" },
+  "dependencies": { "jszip": "3.10.1" }
+}
