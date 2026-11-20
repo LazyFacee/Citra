@@ -19,7 +19,7 @@
 | Kategori | Alat |
 |---|---|
 | **Objek dan background** | **Hapus background** (AI atau warna latar), **Pilih objek** (klik untuk memilih area), Ganti background (warna, gradasi, atau blur) |
-| **Perbaiki** | Perbesar gambar (2x sampai 4x), Perbaiki otomatis, Warna dan cahaya, Filter foto |
+| **Perbaiki** | Perbesar gambar (2x sampai 4x, dengan **AI super-resolution**), Perbaiki otomatis, Warna dan cahaya, Filter foto |
 | **Ubah bentuk** | Potong gambar (rasio terkunci), Ubah ukuran, Putar dan balik, Bingkai dan bayangan, Gabung gambar (kolase) |
 | **Ekspor** | Kecilkan ukuran, Ubah format (PNG, JPG, WebP, EXIF ikut terhapus) |
 | **Edit dan lindungi** | Sensor area (piksel, blur, blok hitam), Tambah teks, Watermark |
@@ -30,7 +30,7 @@ Selain itu: pratinjau langsung untuk alat penyesuaian, pembanding sebelum dan se
 
 Semua pemrosesan berjalan di browsermu. Gambarmu **tidak pernah diunggah**. Buka DevTools (`F12`), tab **Network**, lalu proses sebuah gambar untuk membuktikannya.
 
-Dua hal yang tetap terjadi: font dimuat dari Google Fonts, dan **metode AI di Hapus background** mengunduh pustaka dan model sekali dari CDN (±44 MB, lalu disimpan di cache browser). Hanya model yang diunduh, gambarmu tetap di perangkatmu.
+Dua hal yang tetap terjadi: font dimuat dari Google Fonts, dan **fitur AI** (Hapus background dan Perbesar gambar mode AI) mengunduh pustaka dan model sekali dari CDN (puluhan MB, lalu disimpan di cache browser). Pustaka dimuat dari jsDelivr, dengan cadangan unpkg. Model dimuat dari Hugging Face, dengan cadangan cermin hf-mirror.com bila huggingface.co gagal diakses. Hanya model yang diunduh, gambarmu tetap di perangkatmu.
 
 ## Menjalankan
 
@@ -50,11 +50,11 @@ npm ci && npm run build
 SITE_URL=https://nama.vercel.app npm run build
 ```
 
-Setelah mengubah situs yang sudah dipasang, naikkan nomor versi di `sw.js` (`citra-v1` menjadi `citra-v2`).
+Setelah mengubah situs yang sudah dipasang, naikkan nomor versi di `sw.js` (`citra-v2` menjadi `citra-v3`).
 
 ## Batasan
 
-- **Perbesar gambar** memakai resampling berkualitas tinggi dan penajaman. Ini bukan AI yang menambah detail baru. Hasil dibatasi sekitar 64 megapiksel.
+- **Perbesar gambar mode AI** memakai model Swin2SR dan memproses gambar per blok. Di browser tanpa WebGPU, foto besar bisa butuh beberapa menit, jadi potong atau perkecil dulu. Mode Cepat hanya resampling biasa dan tidak menambah ketajaman asli. Hasil dibatasi sekitar 64 megapiksel.
 - **Hapus background metode Warna latar** cocok untuk latar polos. Untuk foto rumit, pakai metode AI.
 - **Pilih objek** memilih area berdasarkan kemiripan warna, bukan mengenali objek.
 - **Sensor area** manual. Tidak ada deteksi wajah otomatis.
@@ -62,12 +62,12 @@ Setelah mengubah situs yang sudah dipasang, naikkan nomor versi di `sw.js` (`cit
 
 ## Model AI dan lisensi
 
-Kode Citra berlisensi [MIT](LICENSE). Metode AI memuat [Transformers.js](https://huggingface.co/docs/transformers.js) (Apache-2.0) dan model BRIA **RMBG-1.4** dari Hugging Face. Lisensi model itu **tidak untuk pemakaian komersial** menurut kartu modelnya, jadi periksa lisensinya sebelum memakai Citra untuk bisnis. JSZip berlisensi MIT atau GPL-3.0. Font Bricolage Grotesque dan DM Sans berlisensi SIL Open Font License.
+Kode Citra berlisensi [MIT](LICENSE). Metode AI memuat [Transformers.js](https://huggingface.co/docs/transformers.js) (Apache-2.0) dan model **BRIA RMBG-1.4** (hapus background) dan **Swin2SR** (perbesar gambar, versi ONNX oleh Xenova) dari Hugging Face. Lisensi RMBG-1.4 **tidak untuk pemakaian komersial** menurut kartu modelnya. Periksa juga lisensi Swin2SR di halaman modelnya. Cek keduanya sebelum memakai Citra untuk bisnis. JSZip berlisensi MIT atau GPL-3.0. Font Bricolage Grotesque dan DM Sans berlisensi SIL Open Font License.
 
 ---
 
 ## English summary
 
-**Citra is a private image toolkit that runs in your browser.** 17 tools: remove background (AI or background color), select object, replace background, upscale, auto enhance, color and light, photo filters, crop, resize, rotate and flip, frame and shadow, collage, compress, convert, censor areas, add text, watermark. Bilingual (ID/EN), light/dark/system theme, installable as a PWA.
+**Citra is a private image toolkit that runs in your browser.** 17 tools: remove background (AI or background color), select object, replace background, AI upscale (Swin2SR), auto enhance, color and light, photo filters, crop, resize, rotate and flip, frame and shadow, collage, compress, convert, censor areas, add text, watermark. Bilingual (ID/EN), light/dark/system theme, installable as a PWA.
 
 Images are never uploaded. The AI background removal downloads Transformers.js and the BRIA RMBG-1.4 model (about 44 MB, cached) from a CDN on first use. RMBG-1.4 is licensed for non-commercial use only, so check its license before commercial use. Build with `npm ci && npm run build`. Code is MIT licensed.

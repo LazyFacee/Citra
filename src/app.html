@@ -201,6 +201,7 @@ textarea:focus{background:var(--surface);border-color:var(--c);outline:0}
 .cmp2 .ln{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:#fff;box-shadow:0 0 8px #0008;pointer-events:none}
 .cmp2 input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
 .th img{width:100%;height:100%;object-fit:cover}
+.lnk{color:var(--ink);font-weight:600;text-decoration:underline}
 </style>
 </head>
 <body>
@@ -260,7 +261,7 @@ const TOOLS=[
 {id:'removebg',c:'cut',big:1,multi:1,col:'#7C5CF0',ic:'M6 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM20 4L8.1 15.9M14.5 14.5L20 20M8.1 8.1L12 12',n:['Hapus background','Remove background'],d:['Potong objek dari latarnya dan simpan sebagai PNG transparan.','Cut the subject out of its background into a transparent PNG.'],hint:AIHINT,o:[AIM(),TOL(),SL('feather',['Haluskan tepi','Edge smoothing'],0,8,2)]},
 {id:'magic',c:'cut',stage:1,col:'#D6409F',ic:'M15 4V2M15 16v-2M8 9h2M20 9h2M17.8 11.8L19 13M15 9h.01M17.8 6.2L19 5M3 21l9-9M12.2 6.2L11 5',n:['Pilih objek','Select object'],d:['Klik bagian gambar untuk memilihnya, lalu hapus, simpan, atau ganti warnanya.','Click parts of the image to select them, then remove, keep or recolor.'],hint:['Klik untuk menambah pilihan. Pakai tombol Kurangi untuk mengoreksi. Naikkan toleransi kalau warnanya bergradasi.','Click to add to the selection. Use Subtract to correct it. Raise tolerance when colors are graded.'],o:[SL('tol',['Toleransi warna','Color tolerance'],2,80,25),{k:'contig',label:['Area pilihan','Selection area'],type:'select',ch:[['1',['Hanya yang bersambung','Connected area only']],['0',['Semua warna serupa','All similar colors']]]},{k:'act',label:['Setelah dipilih','Then'],type:'select',ch:[['remove',['Hapus yang dipilih','Remove selection']],['keep',['Simpan hanya yang dipilih','Keep only selection']],['fill',['Ganti dengan warna','Fill with color']]]},{k:'fc',label:['Warna pengganti','Fill color'],type:'color',val:'#ffffff',when:['act','fill']},SL('feather',['Haluskan tepi','Edge smoothing'],0,8,1)]},
 {id:'replacebg',c:'cut',multi:1,col:'#0EA5A4',ic:'M12 2l10 5-10 5L2 7zM2 17l10 5 10-5M2 12l10 5 10-5',n:['Ganti background','Replace background'],d:['Ganti latar dengan warna, gradasi, atau versi buram dari fotonya.','Swap the background for a color, gradient or a blurred copy of the photo.'],hint:AIHINT,o:[AIM(),TOL(),{k:'bgtype',label:['Latar baru','New background'],type:'select',ch:[['color',['Warna polos','Solid color']],['gradient',['Gradasi','Gradient']],['blur',['Foto asli yang diburamkan','Blurred original']]]},{k:'c1',label:['Warna','Color'],type:'color',val:'#F2B01B'},{k:'c2',label:['Warna akhir gradasi','Gradient end color'],type:'color',val:'#D6409F',when:['bgtype','gradient']},SL('blur',['Kekuatan blur','Blur strength'],1,10,5,1,{when:['bgtype','blur']}),SL('feather',['Haluskan tepi','Edge smoothing'],0,8,2),FMT('png',0),Q()]},
-{id:'upscale',c:'fix',big:1,multi:1,col:'#16A34A',ic:'M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7',n:['Perbesar gambar','Upscale image'],d:['Perbesar 2x sampai 4x dengan resampling halus dan penajaman.','Enlarge 2x to 4x with smooth resampling and sharpening.'],hint:['Ini perbesaran berkualitas tinggi dengan penajaman, bukan AI yang menambah detail baru. Hasilnya dibatasi sekitar 64 megapiksel.','This is high-quality enlargement with sharpening, not an AI that invents new detail. Output is capped at about 64 megapixels.'],o:[{k:'scale',label:['Skala','Scale'],type:'select',val:'2',ch:[['2','2x'],['3','3x'],['4','4x']]},SL('sharp',['Penajaman','Sharpening'],0,100,40),FMT(),Q()]},
+{id:'upscale',c:'fix',big:1,multi:1,col:'#16A34A',ic:'M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7',n:['Perbesar gambar','Upscale image'],d:['Perbesar dan pertajam foto buram dengan AI super-resolution.','Enlarge and sharpen blurry photos with AI super-resolution.'],hint:['Mode AI memakai model Swin2SR (foto nyata) yang dimuat dari CDN sekali (puluhan MB), lalu menyimpannya di cache. Foto besar bisa butuh beberapa menit, jauh lebih cepat di browser dengan WebGPU. Mode Cepat hanya resampling biasa, tidak menambah ketajaman asli.','AI mode uses the Swin2SR real-world model, loaded once from a CDN (tens of MB) and then cached. Large photos can take a few minutes, much faster in browsers with WebGPU. Fast mode is plain resampling and adds no real sharpness.'],o:[{k:'engine',label:['Metode','Method'],type:'select',val:'ai',ch:[['ai',['AI (tajam, lebih lambat)','AI (sharper, slower)']],['fast',['Cepat (resampling biasa)','Fast (plain resampling)']]]},{k:'scale',label:['Skala','Scale'],type:'select',val:'2',ch:[['2','2x'],['3','3x'],['4','4x']]},SL('sharp',['Penajaman tambahan','Extra sharpening'],0,100,20),FMT(),Q()]},
 {id:'enhance',c:'fix',multi:1,live:1,col:'#D08A00',ic:'M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 3v4M21 5h-4',n:['Perbaiki otomatis','Auto enhance'],d:['Seimbangkan kontras dan warna, lalu pertajam sedikit.','Balance contrast and color, then sharpen a little.'],o:[{k:'auto',label:['Seimbangkan tingkat warna','Auto levels'],type:'select',ch:[['1',['Aktif','On']],['0',['Mati','Off']]]},SL('sat',['Kepekatan warna','Color vibrance'],-50,50,12),SL('sharp',['Penajaman','Sharpening'],0,100,30),FMT(),Q()]},
 {id:'adjust',c:'fix',multi:1,live:1,col:'#F2701B',ic:'M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6',n:['Warna & cahaya','Color & light'],d:['Atur kecerahan, kontras, kepekatan, dan kehangatan warna.','Tune brightness, contrast, saturation and warmth.'],o:[SL('bri',['Kecerahan','Brightness'],-100,100,0),SL('con',['Kontras','Contrast'],-100,100,0),SL('sat',['Kepekatan','Saturation'],-100,100,0),SL('warm',['Kehangatan','Warmth'],-100,100,0),FMT(),Q()]},
 {id:'filter',c:'fix',multi:1,live:1,col:'#E11D48',ic:'M12 22a10 10 0 1 1 10-10c0 3-2 4-4 4h-2a2 2 0 0 0-1 3.7 2 2 0 0 1-3 2.3zM7.5 10.5h.01M12 7.5h.01M16.5 10.5h.01',n:['Filter foto','Photo filters'],d:['Hitam putih, sepia, vintage, duotone, dan lainnya.','Black and white, sepia, vintage, duotone and more.'],o:[{k:'preset',label:['Filter','Filter'],type:'select',ch:[['bw',['Hitam putih','Black & white']],['sepia','Sepia'],['vintage','Vintage'],['noir','Noir'],['fade',['Pudar','Fade']],['cool',['Dingin','Cool']],['warm',['Hangat','Warm']],['duo','Duotone'],['invert',['Negatif','Invert']]]},SL('amt',['Kekuatan','Strength'],0,100,100),SL('vig',['Vinyet (gelap di tepi)','Vignette'],0,100,0),FMT(),Q()]},
@@ -376,17 +377,37 @@ function colorMask(s,o){
   const bg=flood(d,w,h,seeds,ref,(+o.tol||30)*3,true),m=new Uint8ClampedArray(w*h);
   for(let i=0;i<w*h;i++)m[i]=bg[i]?0:255;return m;
 }
-let AI=null;
+let TJS=null,AI=null,SR=null,GPUBAD=false;
+const CDNS=['https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/dist/transformers.web.min.js','https://unpkg.com/@huggingface/transformers@3.8.1/dist/transformers.web.min.js','https://fastly.jsdelivr.net/npm/@huggingface/transformers@3.8.1/dist/transformers.web.min.js'];
+const short=e=>String(e&&e.message||e).replace(/\s+/g,' ').slice(0,150);
+const aiFail=e=>E(`Model AI tidak bisa dimuat (${short(e)}). Periksa koneksi internet lalu coba lagi.`,`Could not load the AI model (${short(e)}). Check your connection and try again.`);
+async function tjs(){
+  if(TJS)return TJS;const errs=[];
+  for(const u of window.CITRA_TJS?[window.CITRA_TJS]:CDNS){
+    try{setStatus(L(['Memuat mesin AI…','Loading AI engine…']));TJS=await import(u);return TJS}catch(e){console.warn('CDN gagal:',u,e);errs.push(short(e))}
+  }
+  throw new Error('pustaka: '+errs[0]);
+}
+const dlCb=()=>p=>{if(p.status=='progress'&&p.total>1e6)setStatus(L([`Mengunduh model AI… ${Math.round(p.progress)}%`,`Downloading AI model… ${Math.round(p.progress)}%`]))};
+async function withHosts(T,fn){
+  const errs=[];
+  for(const h of['https://huggingface.co/','https://hf-mirror.com/']){T.env.remoteHost=h;try{return await fn()}catch(e){console.warn('Model gagal dari',h,e);errs.push(short(e))}}
+  throw new Error(errs.join(' | '));
+}
 async function aiLoad(){
   if(AI)return AI;
   try{
-    setStatus(L(['Memuat mesin AI…','Loading AI engine…']));
-    const T=await import(window.CITRA_TJS||'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/dist/transformers.web.min.js');
-    const cb=p=>{if(p.status=='progress'&&p.total>1e6)setStatus(L([`Mengunduh model AI… ${Math.round(p.progress)}%`,`Downloading AI model… ${Math.round(p.progress)}%`]))};
-    const model=await T.AutoModel.from_pretrained('briaai/RMBG-1.4',{device:'wasm',dtype:'q8',progress_callback:cb});
-    const processor=await T.AutoProcessor.from_pretrained('briaai/RMBG-1.4',{config:{do_normalize:true,do_pad:false,do_rescale:true,do_resize:true,image_mean:[.5,.5,.5],feature_extractor_type:'ImageFeatureExtractor',image_std:[1,1,1],resample:2,rescale_factor:.00392156862745098,size:{width:1024,height:1024}}});
-    return AI={T,model,processor};
-  }catch(e){console.error(e);E('Model AI tidak bisa dimuat. Periksa koneksi internet, atau pakai metode Warna latar.','Could not load the AI model. Check your connection, or use the Background color method.')}
+    const T=await tjs();
+    return AI=await withHosts(T,async()=>{
+      let last;
+      for(const dtype of['q8','fp16']){try{
+        const model=await T.AutoModel.from_pretrained('briaai/RMBG-1.4',{device:'wasm',dtype,progress_callback:dlCb()});
+        const processor=await T.AutoProcessor.from_pretrained('briaai/RMBG-1.4',{config:{do_normalize:true,do_pad:false,do_rescale:true,do_resize:true,image_mean:[.5,.5,.5],feature_extractor_type:'ImageFeatureExtractor',image_std:[1,1,1],resample:2,rescale_factor:.00392156862745098,size:{width:1024,height:1024}}});
+        return{T,model,processor};
+      }catch(e){last=e;console.warn('dtype gagal',dtype,e)}}
+      throw last;
+    });
+  }catch(e){console.error(e);aiFail(e)}
 }
 async function aiMask(c){
   const{T,model,processor}=await aiLoad();setStatus(L(['Menganalisis gambar…','Analyzing image…']));
@@ -396,6 +417,37 @@ async function aiMask(c){
     const m=await T.RawImage.fromTensor(output[0].mul(255).to('uint8')).resize(c.width,c.height);return Uint8ClampedArray.from(m.data);
   }finally{URL.revokeObjectURL(url)}
 }
+/* super-resolution AI (Swin2SR real-world x4), diproses per blok */
+async function srPipe(){
+  if(SR)return SR;
+  try{
+    const T=await tjs(),cfgs=[...(navigator.gpu&&!GPUBAD?[{device:'webgpu',dtype:'fp32'}]:[]),{device:'wasm',dtype:'fp32'},{device:'wasm',dtype:'q8'}];
+    return SR=await withHosts(T,async()=>{
+      let last;
+      for(const c of cfgs){try{const p=await T.pipeline('image-to-image','Xenova/swin2SR-realworld-sr-x4-64-bsrgan-psnr',{...c,progress_callback:dlCb()});p.cfg=c;return p}catch(e){last=e;console.warn('konfigurasi gagal',c,e)}}
+      throw last;
+    });
+  }catch(e){console.error(e);aiFail(e)}
+}
+async function runSR(t){
+  const p=await srPipe();
+  try{return await p(t)}catch(e){if(p.cfg.device=='webgpu'){console.warn('WebGPU gagal, beralih ke CPU',e);GPUBAD=true;SR=null;return runSR(t)}throw e}
+}
+async function tilesUp(c,run,S=4,core=96,pad=16){
+  const W=c.width,H=c.height,out=cv(W*S,H*S),ox=g2(out),tx=Math.ceil(W/core),ty=Math.ceil(H/core),n=tx*ty,t0=Date.now();let k=0;
+  for(let j=0;j<ty;j++)for(let i=0;i<tx;i++){
+    const x0=i*core,y0=j*core,x1=Math.min(W,x0+core),y1=Math.min(H,y0+core),rx0=Math.max(0,x0-pad),ry0=Math.max(0,y0-pad),rx1=Math.min(W,x1+pad),ry1=Math.min(H,y1+pad);
+    const t=cv(rx1-rx0,ry1-ry0);g2(t).drawImage(c,rx0,ry0,t.width,t.height,0,0,t.width,t.height);
+    const r=await run(t),ch=r.channels||3,id=new ImageData(r.width,r.height);
+    for(let q=0;q<r.width*r.height;q++){id.data[q*4]=r.data[q*ch];id.data[q*4+1]=r.data[q*ch+1];id.data[q*4+2]=r.data[q*ch+2];id.data[q*4+3]=255}
+    const tmp=cv(r.width,r.height);g2(tmp).putImageData(id,0,0);
+    ox.drawImage(tmp,(x0-rx0)*S,(y0-ry0)*S,(x1-x0)*S,(y1-y0)*S,x0*S,y0*S,(x1-x0)*S,(y1-y0)*S);
+    k++;const left=Math.round((Date.now()-t0)/k*(n-k)/60000);
+    setStatus(L([`AI memperjelas blok ${k}/${n}${k>2&&left>0?` (±${left} mnt lagi)`:''}`,`AI sharpening tile ${k}/${n}${k>2&&left>0?` (~${left} min left)`:''}`]));await tick();
+  }
+  return out;
+}
+function hasAlpha(c){const d=g2(c).getImageData(0,0,c.width,c.height).data;for(let i=3;i<d.length;i+=4)if(d[i]<250)return true;return false}
 async function alphaFor(c,o){
   const sc=Math.min(1,1600/Math.max(c.width,c.height)),s=sc<1?scaleTo(c,c.width*sc,c.height*sc):c;
   let m=o.mode=='ai'?await aiMask(s):colorMask(s,o);
@@ -479,10 +531,17 @@ FN.watermark=(c,o)=>{
     for(let yy=-sp,r=0;yy<sp;yy+=gy,r++)for(let xx=-sp-(r%2?gx/2:0);xx<sp;xx+=gx)x.fillText(t,xx,yy);x.restore()}
   return c;
 };
-FN.up=(c,o)=>{
-  const k=+o.scale||2,w=c.width*k,h=c.height*k;
+FN.up=async(c,o)=>{
+  const k=+o.scale||2,W=c.width,H=c.height,w=W*k,h=H*k;
   if(w*h>64e6)E('Hasil terlalu besar (maks sekitar 64 megapiksel). Pilih skala lebih kecil.','The result is too large (max about 64 megapixels). Choose a smaller scale.');
-  const r=scaleTo(c,w,h);if(+o.sharp)sharpen(r,+o.sharp/100*1.2);return r;
+  let r;
+  if(o.engine!='fast'&&Math.min(W,H)>=16){
+    if(W*H*16>64e6||Math.ceil(W/96)*Math.ceil(H/96)>260)E('Gambar ini terlalu besar untuk mode AI. Perkecil dulu, potong bagian yang perlu, atau pakai mode Cepat.','This image is too large for AI mode. Resize it, crop the part you need, or use Fast mode.');
+    const al=hasAlpha(c)?(()=>{const d=g2(c).getImageData(0,0,W,H).data,a=new Uint8ClampedArray(W*H);for(let i=0;i<a.length;i++)a[i]=d[i*4+3];return a})():null;
+    const big=await tilesUp(c,runSR,4);r=k==4?big:scaleTo(big,w,h);
+    if(al)applyAlpha(r,upMask(al,W,H,r.width,r.height));
+  }else r=scaleTo(c,w,h);
+  if(+o.sharp)sharpen(r,+o.sharp/100*1.2);return r;
 };
 FN.resize=(c,o)=>{
   let w,h;
@@ -771,7 +830,7 @@ async function preview(){
     if(res.single&&!res.alpha&&ext!='txt'){
       const before=thumb(res.orig),[a,b]=await Promise.all([imgDims(before),imgDims(after)]);
       if(a[0]&&Math.abs(a[0]/a[1]-b[0]/b[1])<.02){
-        box.innerHTML=`<div class="cmp2 chk"><img class="bf" alt="" src="${before}"><img class="af" alt="" src="${after}"><i class="ln"></i><input type="range" min="0" max="100" value="50" aria-label="Before / after"></div><p class="hint" style="margin-top:8px;text-align:center">${L(['Geser untuk membandingkan: asli ke kiri, hasil ke kanan.','Slide to compare: original on the left, result on the right.'])}</p>`;
+        box.innerHTML=`<div class="cmp2 chk"><img class="bf" alt="" src="${before}"><img class="af" alt="" src="${after}"><i class="ln"></i><input type="range" min="0" max="100" value="50" aria-label="Before / after"></div><p class="hint" style="margin-top:8px;text-align:center">${L(['Geser untuk membandingkan: asli ke kiri, hasil ke kanan.','Slide to compare: original on the left, result on the right.'])} · <a class="lnk" href="${after}" target="_blank" rel="noopener">${L(['Lihat ukuran penuh','View full size'])}</a></p>`;
         const cm=box.querySelector('.cmp2'),af=cm.querySelector('.af'),ln=cm.querySelector('.ln'),sl=cm.querySelector('input'),set=()=>{af.style.clipPath=`inset(0 0 0 ${sl.value}%)`;ln.style.left=sl.value+'%'};sl.oninput=set;set();return;
       }
     }

@@ -1,4 +1,4 @@
-const V='citra-v1',ASSETS=['./','./index.html','./favicon.svg','./icon-192.png','./icon-512.png','./manifest.webmanifest'];
+const V='citra-v2',ASSETS=['./','./index.html','./favicon.svg','./icon-192.png','./icon-512.png','./manifest.webmanifest'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(ASSETS)));self.skipWaiting()});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==V).map(x=>caches.delete(x)))));self.clients.claim()});
 self.addEventListener('fetch',e=>{
